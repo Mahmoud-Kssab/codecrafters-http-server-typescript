@@ -1,3 +1,4 @@
+import { Buffer } from "buffer";
 import * as net from "net";
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
@@ -7,7 +8,11 @@ console.log("Logs from your program will appear here!");
 const server = net.createServer((socket) => {
   console.log("server started");
   socket.on("data", (data) => {
-    socket.write(Buffer.from("HTTP/1.1 200 OK\r\n\r\n"));
+    const request = data.toString();
+        const path = request.split(' ')[1];
+        const response = path === '/' ? 'HTTP/1.1 200 OK\r\n\r\n' : 'HTTP/1.1 404 Not Found\r\n\r\n';
+        socket.write(response);
+        socket.end();
   });
 
   socket.on("close", () => {
