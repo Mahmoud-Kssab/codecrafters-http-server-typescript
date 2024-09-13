@@ -11,9 +11,13 @@ export const router: any = {
         body: parameters,
       };
     },
-    // "/users/{id}/{name}/{age}": (request: Req) => {
-    //   console.log("--------------------------------");
-    //   return { statusCode: 200, body: "JSON.stringify(parameters)" };
-    // },
+    "/": (parameters: any) => {
+      return {
+        statusCode: 200,
+        statusText: "OK",
+        headers: [],
+        body: parameters,
+      };
+    },
   },
 };

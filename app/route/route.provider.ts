@@ -5,7 +5,7 @@ import { RouteCompiler } from "./route-compiler";
 export class Route {
   protected routeCompiler: RouteCompiler = new RouteCompiler();
   protected request: Req;
-  public route: any;
+  public route!: string;
   public parameters: any = {};
   constructor(request: Req) {
     this.request = request;
@@ -17,8 +17,11 @@ export class Route {
   public match() {
     const method: string = this.request.method;
 
-    this.route = Object.keys(router[method]).map((route: string) => {
-      if (this.matches(route)) return route;
+    Object.keys(router[method]).forEach((route: string) => {
+      if (this.matches(route)) {
+        this.route = route;
+        return;
+      }
     });
   }
 
@@ -40,15 +43,14 @@ export class Route {
     const pattern = this.routeCompiler.compile(uri);
     const matches = this.request.url.match(pattern);
 
-    console.log({ pattern, matches: matches });
+    console.log({ pattern, matchesss: matches });
     console.log({ matches: matches?.slice(1) });
 
-    // let parameters = [];
-    if (matches && matches.length) {
+    if (matches && matches?.slice(1).length) {
       this.parameters = this.matchToKeys(matches.slice(1), uri);
     }
 
-    return Object.keys(this.parameters).length > 0 ? true : false;
+    return matches && matches?.length > 0 ? true : false;
   }
 
   protected post(uri: string) {
