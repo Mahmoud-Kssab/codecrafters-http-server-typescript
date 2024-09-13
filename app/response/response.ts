@@ -20,6 +20,6 @@ export class Response {
 
     console.log({ headersDecoded });
 
-    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n ${headersDecoded}${bodyDecoded}`;
+    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headersDecoded}${bodyDecoded}`;
   }
 }
