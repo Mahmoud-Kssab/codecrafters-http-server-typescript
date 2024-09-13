@@ -25,7 +25,10 @@ export const router: any = {
       return {
         statusCode: 200,
         statusText: "OK",
-        headers: [],
+        headers: [
+          "Content-Type: text/plain",
+          `Content-Length: ${request.header("User-Agent").length}`,
+        ],
         body: { str: request.header("User-Agent") },
       };
     },
