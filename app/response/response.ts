@@ -12,7 +12,7 @@ export class Response {
     console.log({ body222: body, headers });
 
     let headersDecoded =
-      headers && headers.length ? `${headers.join("\r\n")}\r\n\r\n` : "";
+      headers && headers.length ? `${headers.join("\r\n")}\r\n` : "";
     let bodyDecoded =
       body && Object.values(body).length
         ? `${Object.values(body).join("\r\n")}`
@@ -20,6 +20,6 @@ export class Response {
 
     console.log({ headersDecoded });
 
-    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headersDecoded}${bodyDecoded}`;
+    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headersDecoded}\r\n${bodyDecoded}`;
   }
 }
