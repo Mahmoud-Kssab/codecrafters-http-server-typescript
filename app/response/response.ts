@@ -1,19 +1,25 @@
 import { HttpBase } from "../share/http-base";
 
 export class Response {
-  protected response!: string;
+  public response!: string;
   constructor(
     httpVersion: string,
     statusCode: number,
     statusText: string,
     headers: string[],
-    body: string
+    body: string[]
   ) {
+    console.log({ body222: body, headers });
 
-    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headers.join("\r\n")}\r\n${body}\r\n`;
+    let headersDecoded =
+      headers && headers.length ? `${headers.join("\r\n")}\r\n\r\n` : "";
+    let bodyDecoded =
+      body && Object.values(body).length
+        ? `${Object.values(body).join("\r\n")}`
+        : "";
 
-    console.log({
-      response: this.response,
-    });
+    console.log({ headersDecoded });
+
+    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n ${headersDecoded}${bodyDecoded}`;
   }
 }
