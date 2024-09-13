@@ -27,7 +27,11 @@ export class Route {
 
   public routeHandler() {
     if (router[this.request.method][this.route])
-      return router[this.request.method][this.route](this.parameters);
+      return router[this.request.method][this.route](
+        this.parameters,
+        this.request
+      );
+    // TODO: make it with NotFoundError handler
     else
       return {
         statusCode: 404,

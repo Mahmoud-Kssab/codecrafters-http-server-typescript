@@ -12,4 +12,13 @@ export class Req extends HttpBase {
     this.httpVersion = startLine[2];
     // console.log({ startLine: this.startLine, httpVersion: this.httpVersion, url: this.url, method: this.method});
   }
+
+  public header(header: string) {
+    const headerLine = this.headers.find((line) => line.startsWith(header));
+    if (headerLine) {
+      const [key, value] = headerLine.split(": ");
+      return value.trim();
+    }
+    return "";
+  }
 }

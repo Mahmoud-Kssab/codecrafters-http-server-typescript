@@ -1,3 +1,5 @@
+import { Req } from "./request/request";
+
 export const router: any = {
   GET: {
     "/echo/{str}": (parameters: any) => {
@@ -17,6 +19,14 @@ export const router: any = {
         statusText: "OK",
         headers: [],
         body: parameters,
+      };
+    },
+    "/user-agent": (parameters: any, request: Req) => {
+      return {
+        statusCode: 200,
+        statusText: "OK",
+        headers: [],
+        body: { str: request.header("User-Agent") },
       };
     },
   },
