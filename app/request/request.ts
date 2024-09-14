@@ -16,7 +16,7 @@ export class Req extends HttpBase {
   public header(header: string) {
     const headerLine = this.headers.find((line) => line.startsWith(header));
     if (headerLine) {
-      const [key, value] = headerLine.split(": ");
+      const [value] = headerLine.split(": ");
       return value.trim();
     }
     return "";
