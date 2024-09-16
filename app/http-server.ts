@@ -16,9 +16,10 @@ export class HttpServer {
   handleRequest(data: string) {
     const req = new Req(data);
     // Find matching route handler
-    const route = this.route.match(req.method, req.url);
+    const { route, parameters } = this.route.match(req.method, req.url);
     const res = new Response();
     if (route) {
+      res.body = parameters;
       this.route.routes.get[route](req, res);
     } else {
       res.statusCode = 404;

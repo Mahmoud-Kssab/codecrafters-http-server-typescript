@@ -35,6 +35,8 @@ const server = net.createServer((socket) => {
     });
 
     server.get("/echo/{str}", (req: Req, res: Response) => {
+      res.headers = req.headers;
+      res.body = req.body;
       res.setHeader("Content-Type", "text/plain");
       res.setHeader("Content-Length", `${req.header("User-Agent").length}`);
       res.send();

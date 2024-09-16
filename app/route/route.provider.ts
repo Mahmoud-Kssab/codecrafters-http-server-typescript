@@ -23,14 +23,7 @@ export class Route {
       }
     }
 
-    // Object.keys(this.routes[method.toLowerCase()]).forEach((route: string) => {
-    //   if (this.matches(route, url)) {
-    //     this.route = route;
-    //     return;
-    //   }
-    // });
-
-    return this.route;
+    return { route: this.route, parameters: this.parameters };
   }
 
   public matches(route: string, url: string): boolean {

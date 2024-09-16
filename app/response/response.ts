@@ -4,7 +4,7 @@ export class Response {
   public statusCode: number = 200;
   public statusText: string = "OK";
   public headers: string[] = [];
-  public body!: string[];
+  public body: string[] = [];
   constructor() {}
 
   public requestParser(
