@@ -4,62 +4,53 @@ import { RouteCompiler } from "./route-compiler";
 
 export class Route {
   protected routeCompiler: RouteCompiler = new RouteCompiler();
-  protected request: Req;
+  protected method!: string;
+  protected url!: string;
   public route!: string;
   public parameters: any = {};
-  constructor(request: Req) {
-    this.request = request;
+  public routes: any = {
+    get: {},
+    post: {},
+  };
 
-    this.match();
-    this.routeHandler();
-  }
+  constructor() {}
 
-  public match() {
-    const method: string = this.request.method;
-
-    Object.keys(router[method]).forEach((route: string) => {
-      if (this.matches(route)) {
+  public match(method: string, url: string) {
+    Object.keys(this.routes[method.toLowerCase()]).forEach((route: string) => {
+      if (this.matches(route, url)) {
         this.route = route;
         return;
       }
     });
+
+    return this.route;
   }
 
-  public routeHandler() {
-    if (router[this.request.method][this.route])
-      return router[this.request.method][this.route](
-        this.parameters,
-        this.request
-      );
-    // TODO: make it with NotFoundError handler
-    else
-      return {
-        statusCode: 404,
-        statusText: "Not Found",
-        headers: [],
-        body: {},
-      };
-  }
+  // public routeHandler() {
+  //   if (router[this.method][this.route])
+  //     return router[this.method][this.route](this.parameters);
+  //   // TODO: make it with NotFoundError handler
+  //   else
+  //     return {
+  //       statusCode: 404,
+  //       statusText: "Not Found",
+  //       headers: [],
+  //       body: {},
+  //     };
+  // }
 
-  public matches(uri: string): boolean {
-    console.log(this.request.url);
-
-    const pattern = this.routeCompiler.compile(uri);
-    const matches = this.request.url.match(pattern);
+  public matches(route: string, url: string): boolean {
+    const pattern = this.routeCompiler.compile(route);
+    const matches = url.match(pattern);
 
     console.log({ pattern, matchesss: matches });
     console.log({ matches: matches?.slice(1) });
 
     if (matches && matches?.slice(1).length) {
-      this.parameters = this.matchToKeys(matches.slice(1), uri);
+      this.parameters = this.matchToKeys(matches.slice(1), route);
     }
 
     return matches && matches?.length > 0 ? true : false;
-  }
-
-  protected post(uri: string) {
-    const pattern = uri.replace("/{(w+)}/", "([^/]+)");
-    return `#^${pattern}$#`;
   }
 
   public matchToKeys(values: string[], uri: string) {

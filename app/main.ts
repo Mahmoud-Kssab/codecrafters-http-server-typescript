@@ -2,48 +2,29 @@ import * as net from "net";
 import { Req } from "./request/request";
 import { Response } from "./response/response";
 import { Route } from "./route/route.provider";
+import { HttpServer } from "./http-server";
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
 
-const requestParser = (request: Buffer) => {
-  const requestInArray = request.toString();
-
-  //   console.log(requestInArray);
-
-  const requestParts = requestInArray.split("\r\n");
-
-  const startLine = requestParts[0].split(" ");
-  const requestBody = requestParts[-1];
-
-  const method = startLine[0];
-  const url = startLine[1];
-  const protocol = startLine[2];
-
-  return { method, url, protocol };
-};
-
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
+  //   const route = new Route(new Req(data.toString()));
   console.log("server started");
+
+  const server = new HttpServer();
   socket.on("data", (data) => {
+    server.get("/echo/{str}", (req: Req, res: Response) => {
+      console.log(
+        "----------------------------------------------------------------11"
+      );
 
-    const route = new Route(new Req(data.toString()));
-    const response = route.routeHandler();
+      res.end("Hello, world!");
+      socket.write(res.response);
+    });
 
-    console.log({ responseeeee: response });
+    server.handleRequest(data.toString());
 
-    const res = new Response(
-      "HTTP/1.1",
-      response.statusCode,
-      response.statusText,
-      response.headers,
-      response.body
-    );
-
-    console.log({ response: res.response });
-
-    socket.write(res.response);
     socket.end();
   });
 
