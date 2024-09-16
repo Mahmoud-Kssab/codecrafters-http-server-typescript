@@ -6,7 +6,6 @@ export class HttpServer {
   public server: any;
   public route: Route = new Route();
 
-  //   public routes: Route = new Route(this.request);
   constructor() {}
 
   get(path: string, handler: CallableFunction) {

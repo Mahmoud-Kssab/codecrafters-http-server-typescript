@@ -10,7 +10,6 @@ export class Req extends HttpBase {
     this.url = startLine[1];
     this.method = startLine[0];
     this.httpVersion = startLine[2];
-    // console.log({ startLine: this.startLine, httpVersion: this.httpVersion, url: this.url, method: this.method});
   }
 
   public header(header: string) {
@@ -21,4 +20,6 @@ export class Req extends HttpBase {
     }
     return "";
   }
+
+  public getHeaders(param: string) {}
 }

@@ -3,14 +3,14 @@ export class Response {
   public httpVersion: string = "HTTP/1.1";
   public statusCode: number = 200;
   public statusText: string = "OK";
-  public headers!: string[];
+  public headers: string[] = [];
   public body!: string[];
   constructor() {}
 
   public requestParser(
-    httpVersion: string,
-    statusCode: number,
-    statusText: string,
+    httpVersion: string = "HTTP/1.1",
+    statusCode: number = 200,
+    statusText: string = "OK",
     headers: string[],
     body: string[]
   ): string {
@@ -23,12 +23,12 @@ export class Response {
 
     this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headersDecoded}\r\n${bodyDecoded}`;
 
-    console.log(this.response);
-
     return this.response;
   }
 
   public send(statusText: string = "OK"): string {
+    console.log({ h: this.headers });
+
     this.statusText = statusText;
     return this.requestParser(
       this.httpVersion,
@@ -37,5 +37,9 @@ export class Response {
       this.headers,
       this.body
     );
+  }
+
+  public setHeader(name: string, value: string) {
+    this.headers.push(`${name}: ${value}`);
   }
 }

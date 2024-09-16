@@ -1,31 +1,47 @@
 import * as net from "net";
+
 import { Req } from "./request/request";
-import { Response } from "./response/response";
-import { Route } from "./route/route.provider";
 import { HttpServer } from "./http-server";
+import { Response } from "./response/response";
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
 
 // Uncomment this to pass the first stage
 const server = net.createServer((socket) => {
-  //   const route = new Route(new Req(data.toString()));
   console.log("server started");
 
   const server = new HttpServer();
   socket.on("data", (data) => {
     server.get("/", (req: Req, res: Response) => {
+      res.setHeader("Content-Type", "text/plain");
+      console.log({ x: req.header("User-Agent") });
+
+      res.setHeader("Content-Length", `${req.header("User-Agent").length}`);
       res.send();
-      socket.write(res.response);
+      console.log({ res: res.response });
+
+      socket.write(Buffer.from(res.response));
     });
-    
+
+    server.get("/user-agent", (req: Req, res: Response) => {
+      res.setHeader("Content-Type", "text/plain");
+      res.setHeader("Content-Length", `${req.header("User-Agent").length}`);
+
+      res.send();
+      console.log({ res: res.response });
+
+      socket.write(Buffer.from(res.response));
+    });
+
     server.get("/echo/{str}", (req: Req, res: Response) => {
-      res.send("Hello, world!");
-      socket.write(res.response);
+      res.setHeader("Content-Type", "text/plain");
+      res.setHeader("Content-Length", `${req.header("User-Agent").length}`);
+      res.send();
+      socket.write(Buffer.from(res.response));
     });
 
     server.handleRequest(data.toString());
-
     socket.end();
   });
 
