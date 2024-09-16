@@ -1,15 +1,13 @@
-import { HttpBase } from "../share/http-base";
-
 export class Response {
   public response!: string;
-  public httpVersion: string = "HTTP1.1";
+  public httpVersion: string = "HTTP/1.1";
   public statusCode: number = 200;
   public statusText: string = "OK";
   public headers!: string[];
   public body!: string[];
   constructor() {}
 
-  public send(
+  public requestParser(
     httpVersion: string,
     statusCode: number,
     statusText: string,
@@ -25,12 +23,14 @@ export class Response {
 
     this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headersDecoded}\r\n${bodyDecoded}`;
 
+    console.log(this.response);
+
     return this.response;
   }
 
-  public end(statusText: string): string {
+  public send(statusText: string = "OK"): string {
     this.statusText = statusText;
-    return this.send(
+    return this.requestParser(
       this.httpVersion,
       this.statusCode,
       this.statusText,

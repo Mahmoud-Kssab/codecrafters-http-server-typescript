@@ -23,7 +23,7 @@ export class HttpServer {
       this.route.routes.get[route](req, res);
     } else {
       res.statusCode = 404;
-      res.end("Not Found");
+      res.send("Not Found");
     }
   }
 }

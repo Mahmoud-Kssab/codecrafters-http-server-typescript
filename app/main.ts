@@ -14,12 +14,13 @@ const server = net.createServer((socket) => {
 
   const server = new HttpServer();
   socket.on("data", (data) => {
+    server.get("/", (req: Req, res: Response) => {
+      res.send();
+      socket.write(res.response);
+    });
+    
     server.get("/echo/{str}", (req: Req, res: Response) => {
-      console.log(
-        "----------------------------------------------------------------11"
-      );
-
-      res.end("Hello, world!");
+      res.send("Hello, world!");
       socket.write(res.response);
     });
 

@@ -1,5 +1,4 @@
 import { Req } from "../request/request";
-import { router } from "../router";
 import { RouteCompiler } from "./route-compiler";
 
 export class Route {
@@ -16,28 +15,23 @@ export class Route {
   constructor() {}
 
   public match(method: string, url: string) {
-    Object.keys(this.routes[method.toLowerCase()]).forEach((route: string) => {
-      if (this.matches(route, url)) {
-        this.route = route;
-        return;
+    const routes = Object.keys(this.routes[method.toLowerCase()]);
+    for (let index = 0; index < routes.length; index++) {
+      if (this.matches(routes[index], url)) {
+        this.route = routes[index];
+        break;
       }
-    });
+    }
+
+    // Object.keys(this.routes[method.toLowerCase()]).forEach((route: string) => {
+    //   if (this.matches(route, url)) {
+    //     this.route = route;
+    //     return;
+    //   }
+    // });
 
     return this.route;
   }
-
-  // public routeHandler() {
-  //   if (router[this.method][this.route])
-  //     return router[this.method][this.route](this.parameters);
-  //   // TODO: make it with NotFoundError handler
-  //   else
-  //     return {
-  //       statusCode: 404,
-  //       statusText: "Not Found",
-  //       headers: [],
-  //       body: {},
-  //     };
-  // }
 
   public matches(route: string, url: string): boolean {
     const pattern = this.routeCompiler.compile(route);
