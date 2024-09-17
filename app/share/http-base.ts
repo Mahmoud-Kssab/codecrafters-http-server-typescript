@@ -9,6 +9,6 @@ export class HttpBase {
     const requestParts = request.split("\r\n");
     this.startLine = requestParts[0];
     this.headers = requestParts.slice(1, requestParts.length - 2);
-    this.body = requestParts[-1];
+    this.body = requestParts[requestParts.length - 1];
   }
 }

@@ -36,8 +36,6 @@ const server = net.createServer((socket) => {
   });
 
   server.get("/files/{filename}", (req: Req, res: Response) => {
-    console.log({ arg: program.args[0] });
-
     try {
       const body = fs.readFileSync(
         join(program.args[0], req.parameters.filename),
@@ -48,6 +46,24 @@ const server = net.createServer((socket) => {
       res.setHeader("Content-Type", "application/octet-stream");
       res.setBody(body);
       res.send("OK");
+    } catch (error) {
+      console.log({ error });
+
+      res.statusCode = 404;
+      res.send("Not Found");
+    }
+  });
+
+  server.post("/files/{filename}", (req: Req, res: Response) => {
+    try {
+      fs.writeFileSync(
+        join(program.args[0], req.parameters.filename),
+        req.body,
+        "utf8"
+      );
+
+      res.statusCode = 201;
+      res.send("Created");
     } catch (error) {
       console.log({ error });
 

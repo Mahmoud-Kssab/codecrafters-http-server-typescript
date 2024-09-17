@@ -14,6 +14,8 @@ export class Route {
   constructor() {}
 
   public match(method: string, url: string) {
+    console.log({ methods: this.routes[method.toLowerCase()] });
+
     const routes = Object.keys(this.routes[method.toLowerCase()]);
     for (let index = 0; index < routes.length; index++) {
       if (this.matches(routes[index], url)) {

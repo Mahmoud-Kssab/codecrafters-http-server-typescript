@@ -7,6 +7,7 @@ export class Req extends HttpBase {
   public parameters: any = {};
   constructor(request: string) {
     super(request);
+
     const startLine = this.startLine.split(" ");
     this.url = startLine[1];
     this.method = startLine[0];
