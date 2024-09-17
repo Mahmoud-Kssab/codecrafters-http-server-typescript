@@ -4,7 +4,7 @@ export class Response {
   public statusCode: number = 200;
   public statusText: string = "OK";
   public headers: string[] = [];
-  public body: string = "";
+  public body: string | Buffer = "";
   constructor() {}
 
   public responseParser(statusText: string = "OK") {
@@ -27,7 +27,7 @@ export class Response {
     this.headers.push(`${name}: ${value}`);
   }
 
-  public setBody(body: string) {
+  public setBody(body: string | Buffer) {
     this.body = body;
     this.setHeader("Content-Type", "text/plain");
     this.setHeader("Content-Length", body.length.toString());

@@ -1,11 +1,13 @@
 import * as fs from "fs";
 import * as net from "net";
+import { join } from "path";
+import { gzip } from "node-gzip";
+import { program } from "commander";
 
 import { Req } from "./request/request";
 import { HttpServer } from "./http-server";
 import { Response } from "./response/response";
-import { program } from "commander";
-import { join } from "path";
+import { gzipSync } from "zlib";
 
 // You can use print statements as follows for debugging, they'll be visible when running tests.
 console.log("Logs from your program will appear here!");
@@ -31,8 +33,18 @@ const server = net.createServer((socket) => {
   });
 
   server.get("/echo/{str}", (req: Req, res: Response) => {
-    res.setBody(req.parameters.str);
-    res.send();
+    const acceptEncoding = req.header("Accept-Encoding");
+
+    if (acceptEncoding && acceptEncoding === "gzip") {
+      res.setHeader("Content-Encoding", "gzip");
+      const compressedBody = gzipSync(req.parameters.str);
+
+      res.setBody(compressedBody);
+      res.send();
+    } else {
+      res.setBody(req.parameters.str);
+      res.send();
+    }
   });
 
   server.get("/files/{filename}", (req: Req, res: Response) => {
@@ -67,6 +79,8 @@ const server = net.createServer((socket) => {
 
   socket.on("data", async (data) => {
     const response = server.handleRequest(data.toString());
+    console.log({ response });
+
     socket.write(Buffer.from(response));
     socket.end();
   });
