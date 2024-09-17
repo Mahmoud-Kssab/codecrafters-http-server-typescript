@@ -36,12 +36,9 @@ const server = net.createServer((socket) => {
     const acceptEncoding = req.header("Accept-Encoding");
 
     if (acceptEncoding && acceptEncoding.includes("gzip")) {
-      console.log({ b: req.parameters.str });
-
       res.setHeader("Content-Encoding", "gzip");
-      const compressedBody = gzipSync(req.parameters.str);
-
-      res.setBody(compressedBody);
+      const compressedStr = gzipSync(req.parameters.str);
+      res.setBody(compressedStr);
       res.send();
     } else {
       res.setBody(req.parameters.str);
@@ -83,7 +80,7 @@ const server = net.createServer((socket) => {
     const response = server.handleRequest(data.toString());
     console.log({ response });
 
-    socket.write(Buffer.from(response));
+    socket.write(response);
     socket.end();
   });
 
