@@ -8,12 +8,12 @@ export class HttpServer {
 
   constructor() {}
 
-  get(path: string, handler: CallableFunction) {
+  public get(path: string, handler: CallableFunction) {
     this.route.routes.get[path] = handler;
   }
 
   // Method to handle incoming requests
-  handleRequest(data: string) {
+  public handleRequest(data: string) {
     const req = new Req(data);
     // Find matching route handler
     const { route, parameters } = this.route.match(req.method, req.url);

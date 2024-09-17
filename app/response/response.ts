@@ -7,32 +7,20 @@ export class Response {
   public body: string = "";
   constructor() {}
 
-  public responseParser(
-    httpVersion: string = "HTTP/1.1",
-    statusCode: number = 200,
-    statusText: string = "OK",
-    headers: string[],
-    body: string
-  ): string {
+  public responseParser(statusText: string = "OK") {
     let headersDecoded =
-      headers && headers.length ? `${headers.join("\r\n")}\r\n` : "";
+      this.headers && this.headers.length
+        ? `${this.headers.join("\r\n")}\r\n`
+        : "";
 
-    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headersDecoded}\r\n${this.body}`;
-
-    return this.response;
+    this.response = `${this.httpVersion} ${this.statusCode} ${statusText}\r\n${headersDecoded}\r\n${this.body}`;
   }
 
-  public send(statusText: string = "OK"): string {
-    console.log({ h: this.headers });
-
+  public send(statusText: string = "OK") {
     this.statusText = statusText;
-    return this.responseParser(
-      this.httpVersion,
-      this.statusCode,
-      this.statusText,
-      this.headers,
-      this.body
-    );
+    this.responseParser(this.statusText);
+
+    console.log({ re: this.response });
   }
 
   public setHeader(name: string, value: string) {
@@ -40,8 +28,8 @@ export class Response {
   }
 
   public setBody(body: string) {
+    this.body = body;
     this.setHeader("Content-Type", "text/plain");
     this.setHeader("Content-Length", body.length.toString());
-    this.body = body;
   }
 }
