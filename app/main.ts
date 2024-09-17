@@ -55,21 +55,14 @@ const server = net.createServer((socket) => {
   });
 
   server.post("/files/{filename}", (req: Req, res: Response) => {
-    try {
-      fs.writeFileSync(
-        join(program.args[0], req.parameters.filename),
-        req.body,
-        "utf8"
-      );
+    fs.writeFileSync(
+      join(program.args[0], req.parameters.filename),
+      req.body,
+      "utf8"
+    );
 
-      res.statusCode = 201;
-      res.send("Created");
-    } catch (error) {
-      console.log({ error });
-
-      res.statusCode = 404;
-      res.send("Not Found");
-    }
+    res.statusCode = 201;
+    res.send("Created");
   });
 
   socket.on("data", async (data) => {
