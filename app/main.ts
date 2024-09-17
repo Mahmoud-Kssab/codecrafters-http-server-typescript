@@ -35,7 +35,7 @@ const server = net.createServer((socket) => {
   server.get("/echo/{str}", (req: Req, res: Response) => {
     const acceptEncoding = req.header("Accept-Encoding");
 
-    if (acceptEncoding && acceptEncoding === "gzip") {
+    if (acceptEncoding && acceptEncoding.includes("gzip")) {
       res.setHeader("Content-Encoding", "gzip");
       const compressedBody = gzipSync(req.parameters.str);
 
