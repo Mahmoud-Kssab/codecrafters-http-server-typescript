@@ -1,4 +1,3 @@
-import { Req } from "../request/request";
 import { RouteCompiler } from "./route-compiler";
 
 export class Route {

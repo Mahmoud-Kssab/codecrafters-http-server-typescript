@@ -4,24 +4,20 @@ export class Response {
   public statusCode: number = 200;
   public statusText: string = "OK";
   public headers: string[] = [];
-  public body: string[] = [];
+  public body: string = "";
   constructor() {}
 
-  public requestParser(
+  public responseParser(
     httpVersion: string = "HTTP/1.1",
     statusCode: number = 200,
     statusText: string = "OK",
     headers: string[],
-    body: string[]
+    body: string
   ): string {
     let headersDecoded =
       headers && headers.length ? `${headers.join("\r\n")}\r\n` : "";
-    let bodyDecoded =
-      body && Object.values(body).length
-        ? `${Object.values(body).join("\r\n")}`
-        : "";
 
-    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headersDecoded}\r\n${bodyDecoded}`;
+    this.response = `${httpVersion} ${statusCode} ${statusText}\r\n${headersDecoded}\r\n${this.body}`;
 
     return this.response;
   }
@@ -30,7 +26,7 @@ export class Response {
     console.log({ h: this.headers });
 
     this.statusText = statusText;
-    return this.requestParser(
+    return this.responseParser(
       this.httpVersion,
       this.statusCode,
       this.statusText,
@@ -41,5 +37,11 @@ export class Response {
 
   public setHeader(name: string, value: string) {
     this.headers.push(`${name}: ${value}`);
+  }
+
+  public setBody(body: string) {
+    this.setHeader("Content-Type", "text/plain");
+    this.setHeader("Content-Length", body.length.toString());
+    this.body = body;
   }
 }

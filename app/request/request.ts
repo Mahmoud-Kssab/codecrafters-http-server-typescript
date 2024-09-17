@@ -4,6 +4,7 @@ export class Req extends HttpBase {
   public method!: string;
   public url!: string;
   public httpVersion!: string;
+  public parameters: any = {};
   constructor(request: string) {
     super(request);
     const startLine = this.startLine.split(" ");
@@ -15,7 +16,8 @@ export class Req extends HttpBase {
   public header(header: string) {
     const headerLine = this.headers.find((line) => line.startsWith(header));
     if (headerLine) {
-      const [value] = headerLine.split(": ");
+      const [key, value] = headerLine.split(": ");
+
       return value.trim();
     }
     return "";

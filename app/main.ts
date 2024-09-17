@@ -12,38 +12,26 @@ const server = net.createServer((socket) => {
   console.log("server started");
 
   const server = new HttpServer();
+  server.get("/", (req: Req, res: Response) => {
+    res.send();
+    console.log({ res: res.response });
+  });
+
+  server.get("/user-agent", (req: Req, res: Response) => {
+    res.setBody(req.header("User-Agent"));
+    console.log({ body: req.body });
+    res.send();
+    console.log({ res: res.response });
+  });
+
+  server.get("/echo/{str}", (req: Req, res: Response) => {
+    res.setBody(req.parameters.str);
+    res.send();
+  });
+
   socket.on("data", (data) => {
-    server.get("/", (req: Req, res: Response) => {
-      res.setHeader("Content-Type", "text/plain");
-      console.log({ x: req.header("User-Agent") });
-
-      res.setHeader("Content-Length", `${req.header("User-Agent").length}`);
-      res.send();
-      console.log({ res: res.response });
-
-      socket.write(Buffer.from(res.response));
-    });
-
-    server.get("/user-agent", (req: Req, res: Response) => {
-      res.setHeader("Content-Type", "text/plain");
-      res.setHeader("Content-Length", `${req.header("User-Agent").length}`);
-
-      res.send();
-      console.log({ res: res.response });
-
-      socket.write(Buffer.from(res.response));
-    });
-
-    server.get("/echo/{str}", (req: Req, res: Response) => {
-      res.headers = req.headers;
-      res.body = req.body;
-      res.setHeader("Content-Type", "text/plain");
-      res.setHeader("Content-Length", `${req.header("User-Agent").length}`);
-      res.send();
-      socket.write(Buffer.from(res.response));
-    });
-
-    server.handleRequest(data.toString());
+    const response = server.handleRequest(data.toString());
+    socket.write(Buffer.from(response));
     socket.end();
   });
 

@@ -19,11 +19,13 @@ export class HttpServer {
     const { route, parameters } = this.route.match(req.method, req.url);
     const res = new Response();
     if (route) {
-      res.body = parameters;
+      req.parameters = parameters;
       this.route.routes.get[route](req, res);
     } else {
       res.statusCode = 404;
       res.send("Not Found");
     }
+
+    return res.response;
   }
 }
