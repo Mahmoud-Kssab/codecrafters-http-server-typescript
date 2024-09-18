@@ -19,68 +19,27 @@ const options = program.opts();
 const server = net.createServer((socket) => {
   console.log("server started");
 
-  const server = new HttpServer();
-  server.get("/", (req: Req, res: Response) => {
+  const httpServer = new HttpServer();
+  httpServer.get("/", (req: Req, res: Response) => {
     res.send();
     console.log({ res: res.response });
   });
 
-  server.get("/user-agent", (req: Req, res: Response) => {
-    res.setBody(req.header("User-Agent"));
-    console.log({ body: req.body });
+  httpServer.get("/echo/{str}", (req: Req, res: Response) => {
+    const comm = gzipSync(req.parameters.str);
+    res.setBody(comm);
     res.send();
-    console.log({ res: res.response });
-  });
-
-  server.get("/echo/{str}", (req: Req, res: Response) => {
-    const acceptEncoding = req.header("Accept-Encoding");
-
-    if (acceptEncoding && acceptEncoding.includes("gzip")) {
-      res.setHeader("Content-Encoding", "gzip");
-      const compressedStr = gzipSync(req.parameters.str);
-      res.setBody(compressedStr);
-      res.send();
-    } else {
-      res.setBody(req.parameters.str);
-      res.send();
-    }
-  });
-
-  server.get("/files/{filename}", (req: Req, res: Response) => {
-    try {
-      const body = fs.readFileSync(
-        join(program.args[0], req.parameters.filename),
-        {
-          encoding: "utf8",
-        }
-      );
-      res.setHeader("Content-Type", "application/octet-stream");
-      res.setBody(body);
-      res.send("OK");
-    } catch (error) {
-      console.log({ error });
-
-      res.statusCode = 404;
-      res.send("Not Found");
-    }
-  });
-
-  server.post("/files/{filename}", (req: Req, res: Response) => {
-    fs.writeFileSync(
-      join(program.args[0], req.parameters.filename),
-      req.body,
-      "utf8"
-    );
-
-    res.statusCode = 201;
-    res.send("Created");
   });
 
   socket.on("data", async (data) => {
-    const response = server.handleRequest(data.toString());
-    console.log({ response });
+    const res = httpServer.handleRequest(data.toString());
 
-    socket.write(response);
+    socket.write(res.response);
+
+    console.log({ bb: res.body.toString("hex") });
+
+    socket.write(res.body);
+
     socket.end();
   });
 

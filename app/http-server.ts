@@ -1,3 +1,4 @@
+import { gzipSync } from "zlib";
 import { Req } from "./request/request";
 import { Response } from "./response/response";
 import { Route } from "./route/route.provider";
@@ -25,12 +26,21 @@ export class HttpServer {
     const res = new Response();
     if (route) {
       req.parameters = parameters;
+
+      const acceptEncoding = req.header("Accept-Encoding");
+      if (acceptEncoding && acceptEncoding.includes("gzip")) {
+        res.gzip = true;
+        res.setHeader("Content-Encoding", "gzip");
+      }
+
       this.route.routes[req.method.toLocaleLowerCase()][route](req, res);
+
+      console.log({ body11: res.body.toString("hex") });
     } else {
       res.statusCode = 404;
       res.send("Not Found");
     }
 
-    return res.response;
+    return res;
   }
 }
