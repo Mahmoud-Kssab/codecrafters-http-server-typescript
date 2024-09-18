@@ -32,7 +32,7 @@ const server = net.createServer((socket) => {
 
   httpServer.get("/echo/{str}", (req: Req, res: Response) => {
     const comm = gzipSync(req.parameters.str);
-    res.setBody(comm);
+    res.setBody(req.parameters.str);
     res.send();
   });
 
