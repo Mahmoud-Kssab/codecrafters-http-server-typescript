@@ -29,8 +29,7 @@ export class Response {
   }
 
   public setBody(body: string | Buffer) {
-    // this.body = this.body ? gzipSync(body) : body;
-    this.body = body;
+    this.body = this.gzip ? gzipSync(body) : body;
     this.setHeader("Content-Type", "text/plain");
     this.setHeader("Content-Length", body.length.toString());
   }

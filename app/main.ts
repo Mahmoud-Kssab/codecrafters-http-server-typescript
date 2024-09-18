@@ -31,17 +31,8 @@ const server = net.createServer((socket) => {
   });
 
   httpServer.get("/echo/{str}", (req: Req, res: Response) => {
-    const acceptEncoding = req.header("Accept-Encoding");
-    if (acceptEncoding && acceptEncoding.includes("gzip")) {
-      res.gzip = true;
-      const comm = gzipSync(req.parameters.str);
-      res.setHeader("Content-Encoding", "gzip");
-      res.setBody(comm);
-      res.send();
-    } else {
-      res.setBody(req.parameters.str);
-      res.send();
-    }
+    res.setBody(req.parameters.str);
+    res.send();
   });
 
   httpServer.get("/files/{filename}", (req: Req, res: Response) => {

@@ -27,11 +27,11 @@ export class HttpServer {
     if (route) {
       req.parameters = parameters;
 
-      // const acceptEncoding = req.header("Accept-Encoding");
-      // if (acceptEncoding && acceptEncoding.includes("gzip")) {
-      //   res.gzip = true;
-      //   res.setHeader("Content-Encoding", "gzip");
-      // }
+      const acceptEncoding = req.header("Accept-Encoding");
+      if (acceptEncoding && acceptEncoding.includes("gzip")) {
+        res.gzip = true;
+        res.setHeader("Content-Encoding", "gzip");
+      }
 
       this.route.routes[req.method.toLocaleLowerCase()][route](req, res);
 
