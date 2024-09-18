@@ -28,7 +28,7 @@ export class Response {
     this.headers.push(`${name}: ${value}`);
   }
 
-  public setBody(body: Buffer) {
+  public setBody(body: string | Buffer) {
     this.body = this.gzip ? body : body;
     this.setHeader("Content-Type", "text/plain");
     this.setHeader("Content-Length", body.length.toString());

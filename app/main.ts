@@ -25,18 +25,51 @@ const server = net.createServer((socket) => {
     console.log({ res: res.response });
   });
 
+  httpServer.get("/user-agent", (req: Req, res: Response) => {
+    res.setBody(req.header("User-Agent"));
+    res.send();
+  });
+
   httpServer.get("/echo/{str}", (req: Req, res: Response) => {
     const comm = gzipSync(req.parameters.str);
     res.setBody(comm);
     res.send();
   });
 
+  httpServer.get("/files/{filename}", (req: Req, res: Response) => {
+    try {
+      const body = fs.readFileSync(
+        join(program.args[0], req.parameters.filename),
+        {
+          encoding: "utf8",
+        }
+      );
+      res.setHeader("Content-Type", "application/octet-stream");
+      res.setBody(body);
+      res.send("OK");
+    } catch (error) {
+      console.log({ error });
+
+      res.statusCode = 404;
+      res.send("Not Found");
+    }
+  });
+
+  httpServer.post("/files/{filename}", (req: Req, res: Response) => {
+    fs.writeFileSync(
+      join(program.args[0], req.parameters.filename),
+      req.body,
+      "utf8"
+    );
+
+    res.statusCode = 201;
+    res.send("Created");
+  });
+
   socket.on("data", async (data) => {
     const res = httpServer.handleRequest(data.toString());
 
     socket.write(res.response);
-
-    console.log({ bb: res.body.toString("hex") });
 
     socket.write(res.body);
 
